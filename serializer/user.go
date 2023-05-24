@@ -11,6 +11,10 @@ type User struct {
 	Avatar    string `json:"avatar"`
 	CreatedAt int64  `json:"created_at"`
 }
+type UserResponse struct {
+	Response
+	Data User `json:"data"`
+}
 
 // BuildUser 序列化用户
 func BuildUser(user model.User) User {
