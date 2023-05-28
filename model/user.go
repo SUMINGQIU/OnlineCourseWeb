@@ -36,6 +36,7 @@ func GetUser(ID interface{}) (User, error) {
 // SetPassword 设置密码
 func (user *User) SetPassword(password string) error {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), PassWordCost)
+	// md5("12345678"+"salt", 12次)
 	if err != nil {
 		return err
 	}
@@ -45,6 +46,7 @@ func (user *User) SetPassword(password string) error {
 
 // CheckPassword 校验密码
 func (user *User) CheckPassword(password string) bool {
+	// "123123123" ?=$2a$12$jbyJpzCwVJr5DDg7JAKYaOUKQPwiHfIGWfiwudw9vPOwwt5inlhl6
 	err := bcrypt.CompareHashAndPassword([]byte(user.PasswordDigest), []byte(password))
 	return err == nil
 }

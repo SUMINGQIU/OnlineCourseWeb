@@ -12,19 +12,36 @@ import (
 func UserRegister(c *gin.Context) {
 	var service service.UserRegisterService
 	if err := c.ShouldBind(&service); err == nil {
-		res := service.Register()
-		c.JSON(200, res)
+		if user, err := service.Register(); err != nil {
+			c.JSON(200, err)
+		} else {
+			res := serializer.BuildUserResponse(user)
+			c.JSON(200, res)
+		}
 	} else {
 		c.JSON(200, ErrorResponse(err))
 	}
 }
 
+// res := service.Register()
+// c.JSON(200, res)
+
 // UserLogin 用户登录接口
 func UserLogin(c *gin.Context) {
 	var service service.UserLoginService
 	if err := c.ShouldBind(&service); err == nil {
-		res := service.Login(c)
-		c.JSON(200, res)
+		if user, err := service.Login(); err != nil {
+			c.JSON(200, err)
+		} else {
+			// c.SetCookie("user_id", strconv.FormatUint(uint64(user.ID), 10), 3600, "/", "localhost", false, true)
+			s := sessions.Default(c)
+			s.Clear()
+			s.Set("user_id", user.ID)
+			s.Save()
+
+			res := serializer.BuildUserResponse(user)
+			c.JSON(200, res)
+		}
 	} else {
 		c.JSON(200, ErrorResponse(err))
 	}
@@ -39,11 +56,12 @@ func UserMe(c *gin.Context) {
 
 // UserLogout 用户登出
 func UserLogout(c *gin.Context) {
+	// c.SetCookie("user_id", "", 3600, "/", "localhost", false, false)
 	s := sessions.Default(c)
 	s.Clear()
 	s.Save()
 	c.JSON(200, serializer.Response{
-		Code: 0,
-		Msg:  "登出成功",
+		Status: 0,
+		Msg:    "登出成功",
 	})
 }

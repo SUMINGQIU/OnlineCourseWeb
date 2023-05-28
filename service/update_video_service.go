@@ -17,9 +17,9 @@ func (service *UpdateVideoService) Update(id string) serializer.Response {
 	err := model.DB.First(&video, id).Error
 	if err != nil {
 		return serializer.Response{
-			Code:  404,
-			Msg:   "视频不存在",
-			Error: err.Error(),
+			Status: 404,
+			Msg:    "视频不存在",
+			Error:  err.Error(),
 		}
 	}
 
@@ -29,9 +29,9 @@ func (service *UpdateVideoService) Update(id string) serializer.Response {
 
 	if err != nil {
 		return serializer.Response{
-			Code:  50002,
-			Msg:   "视频保存失败",
-			Error: err.Error(),
+			Status: 50002,
+			Msg:    "视频保存失败",
+			Error:  err.Error(),
 		}
 	}
 

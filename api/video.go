@@ -10,9 +10,10 @@ import (
 
 func CreateVideo(c *gin.Context) {
 	// handle the unexpected things
+	user := CurrentUser(c)
 	service := service.CreateVideoService{}
 	if err := c.ShouldBind(&service); err == nil {
-		res := service.Create()
+		res := service.Create(user)
 		c.JSON(200, res)
 	} else {
 		c.JSON(200, ErrorResponse(err))

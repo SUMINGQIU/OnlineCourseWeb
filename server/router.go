@@ -14,8 +14,9 @@ func NewRouter() *gin.Engine {
 
 	// 中间件, 顺序不能改
 	r.Use(middleware.Session(os.Getenv("SESSION_SECRET")))
-	r.Use(middleware.Cors())
 	// cors用于解决跨域问题
+	r.Use(middleware.Cors())
+	// 获取用户身份
 	r.Use(middleware.CurrentUser())
 
 	// 路由
@@ -36,13 +37,16 @@ func NewRouter() *gin.Engine {
 			// User Routing
 			auth.GET("user/me", api.UserMe)
 			auth.DELETE("user/logout", api.UserLogout)
+			auth.POST("videos", api.CreateVideo)
+			auth.DELETE("video/:id", api.DeleteVideo)
+			auth.PUT("video/:id", api.UpdateVideo)
+
 		}
-		v1.POST("videos", api.CreateVideo)
+		// v1.POST("videos", api.CreateVideo)
 		v1.GET("video/:id", api.ShowVideo)
 		v1.GET("videos", api.ListVideo)
-		v1.PUT("video/:id", api.UpdateVideo)
-		v1.DELETE("video/:id", api.DeleteVideo)
 
+		v1.POST("upload/token", api.UploadToken)
 	}
 	return r
 }
