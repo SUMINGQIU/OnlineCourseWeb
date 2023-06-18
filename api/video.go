@@ -27,7 +27,6 @@ func ShowVideo(c *gin.Context) {
 	service := service.ShowVideoService{}
 	res := service.Show(c.Param("id"))
 	c.JSON(200, res)
-
 }
 
 // List Video

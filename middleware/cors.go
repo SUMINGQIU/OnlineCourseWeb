@@ -15,7 +15,7 @@ func Cors() gin.HandlerFunc {
 	// config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Cookie", "video/mp4"}
 	if gin.Mode() == gin.ReleaseMode {
 		// 生产环境需要配置跨域域名，否则403
-		config.AllowOrigins = []string{"http://localhost:8080", "http://www.onlinecslearning.com"}
+		config.AllowOrigins = []string{"http://localhost:8080", "http://www.onlinecslearning.com", "http://localhost:9999"}
 		// config.AllowOrigins = []string{"http://localhost:8080", "https://onlinecslearning-vue.oss-cn-hongkong.aliyuncs.com/CS107-lecture03_1.mp4"}
 	} else {
 		// 测试环境下模糊匹配本地开头的请求

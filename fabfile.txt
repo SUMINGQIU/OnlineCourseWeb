@@ -1,0 +1,19 @@
+from fabric import Connection, task
+from invoke import run
+
+@task
+def deploy(c):
+    with Connection('root@8.222.207.2') as c:
+        c.run("rm -rf OnlineCourseWeb")
+        c.run("git clone https://github.com/SUMINGQIU/OnlineCourseWeb.git", pty=True)
+        c.put("docker-compose.yml", "OnlineCourseWeb/docker-compose.yml")
+        c.run("cd OnlineCourseWeb && docker-compose build && docker-compose rm -fsv && docker-compose up --build -d", pty=True)
+        # c.run("sleep 15 && docker logs -f onlinelearning-api")
+
+
+@task
+def init(c):
+    with Connection('root@8.222.207.2') as c:
+        c.run("apt update")
+        c.run("apt install docker.io")
+        c.run("apt install docker-compose")

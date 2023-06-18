@@ -18,9 +18,27 @@ type Video struct {
 
 // AvatarURL 封面地址
 
-func (video *Video) AvatarURL() string {
-	client, _ := oss.New(os.Getenv("OSS_END_POINT"), os.Getenv("OSS_ACCESS_KEY_ID"), os.Getenv("OSS_ACCESS_KEY_SECRET"))
-	bucket, _ := client.Bucket(os.Getenv("OSS_BUCKET"))
-	signedGetURL, _ := bucket.SignURL(video.Avatar, oss.HTTPGet, 600)
-	return signedGetURL
+func (video *Video) AvatarURL() (string, error) {
+
+	client, err := oss.New(os.Getenv("OSS_END_POINT"), os.Getenv("OSS_ACCESS_KEY_ID"), os.Getenv("OSS_ACCESS_KEY_SECRET"))
+	if err != nil {
+		return "", err
+	}
+	bucket, err := client.Bucket(os.Getenv("OSS_BUCKET"))
+	if err != nil {
+		return "", err
+	}
+	signedGetURL, err := bucket.SignURL(video.Avatar, oss.HTTPGet, 600)
+	if err != nil {
+		return "", err
+	}
+	return signedGetURL, nil
+	// if video == nil {
+	// 	log.Println("Warning: tried to get AvatarURL of nil Video")
+	// 	return ""
+	// }
+	// client, _ := oss.New(os.Getenv("OSS_END_POINT"), os.Getenv("OSS_ACCESS_KEY_ID"), os.Getenv("OSS_ACCESS_KEY_SECRET"))
+	// bucket, _ := client.Bucket(os.Getenv("OSS_BUCKET"))
+	// signedGetURL, _ := bucket.SignURL(video.Avatar, oss.HTTPGet, 600)
+	// return signedGetURL
 }
